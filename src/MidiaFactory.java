@@ -1,11 +1,17 @@
+import java.util.concurrent.atomic.AtomicInteger;
+
 public interface MidiaFactory {
-    default Jogo criarJogo(int id, String titulo, String descricao, String areaConteudo, String generoJogo) {
-        return new Jogo(id, titulo, descricao, areaConteudo, generoJogo);
+    AtomicInteger contador = new AtomicInteger(1);
+
+    default Jogo criarJogo(String titulo, String descricao, String areaConteudo, String generoJogo) {
+        return new Jogo(contador.getAndIncrement(), titulo, descricao, areaConteudo, generoJogo);
     }
-    default Video criarVideo(int id, String titulo, String descricao, String areaConteudo, int duracao) {
-        return new Video(id, titulo, descricao, areaConteudo, duracao);
+
+    default Video criarVideo(String titulo, String descricao, String areaConteudo, int duracao) {
+        return new Video(contador.getAndIncrement(), titulo, descricao, areaConteudo, duracao);
     }
-    default Texto criarTexto(int id, String titulo, String descricao, String areaConteudo, String tipoProducao, int pagina) {
-        return new Texto(id, titulo, descricao, areaConteudo, tipoProducao, pagina);
+
+    default Texto criarTexto(String titulo, String descricao, String areaConteudo, String tipoProducao, int pagina) {
+        return new Texto(contador.getAndIncrement(), titulo, descricao, areaConteudo, tipoProducao, pagina);
     }
 }

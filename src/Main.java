@@ -1,17 +1,12 @@
 public class Main {
-    private Midia[] midiaLista;
+    public Midia[] midiaLista;
     private MidiaFactory midiaFactory;
     private MidiaSearchStrategy searchStrategy;
-    private int index = 0;
 
     public Main(MidiaFactory factory, MidiaSearchStrategy strategy) {
         this.midiaFactory = factory;
         this.searchStrategy = strategy;
         this.midiaLista = new Midia[10];
-    }
-
-    public Midia[] getMidiaLista() {
-        return midiaLista;
     }
 
     public void setSearchStrategy(MidiaSearchStrategy strategy) {
@@ -27,19 +22,25 @@ public class Main {
     }
 
     public void cadastrar() {
-        if (index >= midiaLista.length) {
-            System.out.println("Lista cheia!");
-            return;
+        Jogo novoJogo = midiaFactory.criarJogo("Aventura Matemática", "Jogo educativo", "Matemática", "Puzzle");
+        Video novoVideo = midiaFactory.criarVideo("Vídeo de Teste", "Descrição do vídeo", "Matemática", 20);
+        Texto novoTexto = midiaFactory.criarTexto("Redação exemplar", "Texto dissertativo", "Português", "Redação", 1);
+
+        for (int i = 0; i < midiaLista.length; i++) {
+            if (midiaLista[i] == null) {
+                if (novoJogo != null) {
+                    midiaLista[i] = novoJogo;
+                    novoJogo = null;
+                } else if (novoVideo != null) {
+                    midiaLista[i] = novoVideo;
+                    novoVideo = null;
+                } else if (novoTexto != null) {
+                    midiaLista[i] = novoTexto;
+                    break;
+                }
+            }
         }
-        Jogo novoJogo = midiaFactory.criarJogo(1, "Aventura Matemática", "Jogo de puzzle", "Matemática", "Puzzle");
-        Video novoVideo = midiaFactory.criarVideo(2, "Vídeo de Teste", "Descrição", "Matemática", 20);
-        Texto novoTexto = midiaFactory.criarTexto(3, "Redação enem", "Texto dissertativo", "Português", "Redação", 1);
-
-        midiaLista[index++] = novoJogo;
-        if (index < midiaLista.length) midiaLista[index++] = novoVideo;
-        if (index < midiaLista.length) midiaLista[index++] = novoTexto;
-
-        System.out.println("Mídias cadastradas: Jogo, Vídeo, Texto.");
+        System.out.println("Mídias cadastradas com sucesso.");
     }
 
     public static void main(String[] args) {
@@ -49,12 +50,12 @@ public class Main {
 
         app.cadastrar();
 
-        app.setSearchStrategy(new PesquisaNomeStrategy(app.getMidiaLista()));
-        System.out.println("\n=== Teste Pesquisa por Nome ===");
+        app.setSearchStrategy(new PesquisaNomeStrategy(app.midiaLista));
+        System.out.println("\n=== Pesquisa por Nome ===");
         app.pesquisar();
 
-        app.setSearchStrategy(new PesquisarTipoStrategy(app.getMidiaLista()));
-        System.out.println("\n=== Teste Pesquisa por Tipo ===");
+        app.setSearchStrategy(new PesquisarTipoStrategy(app.midiaLista));
+        System.out.println("\n=== Pesquisa por Tipo ===");
         app.pesquisar();
     }
 }

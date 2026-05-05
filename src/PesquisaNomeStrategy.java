@@ -21,7 +21,6 @@ public class PesquisaNomeStrategy implements MidiaSearchStrategy {
         Scanner sc = new Scanner(System.in);
         System.out.println("Digite o nome:");
         String termo = sc.nextLine();
-        sc.close();
         System.out.println("Pesquisando por nome: " + termo);
         for (Midia m : midias) {
             if (m != null && m.getTitulo().toLowerCase().contains(termo.toLowerCase())) {
