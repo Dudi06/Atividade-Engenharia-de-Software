@@ -1,3 +1,6 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class Main {
     public Midia[] midiaLista;
     private MidiaFactory midiaFactory;
@@ -57,5 +60,46 @@ public class Main {
         app.setSearchStrategy(new PesquisarTipoStrategy(app.midiaLista));
         System.out.println("\n=== Pesquisa por Tipo ===");
         app.pesquisar();
+    }
+
+    public void cadastrarDoJson(String json) {
+        JSONArray array = new JSONArray(json);
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject obj = array.getJSONObject(i);
+            String tipo = obj.getString("tipo");
+            String titulo = obj.getString("titulo");
+            String descricao = obj.optString("descricao", "");
+            String areaConteudo = obj.optString("areaConteudo", "");
+
+            Midia midia = null;
+
+            switch (tipo.toLowerCase()) {
+                case "jogo":
+                    String generoJogo = obj.optString("generoJogo", "");
+                    midia = midiaFactory.criarJogo(titulo, descricao, areaConteudo, generoJogo);
+                    break;
+                case "video":
+                    int duracao = obj.optInt("duracao", 0);
+                    midia = midiaFactory.criarVideo(titulo, descricao, areaConteudo, duracao);
+                    break;
+                case "texto":
+                    String tipoProducao = obj.optString("tipoProducao", "");
+                    int pagina = obj.optInt("pagina", 0);
+                    midia = midiaFactory.criarTexto(titulo, descricao, areaConteudo, tipoProducao, pagina);
+                    break;
+                default:
+                    System.out.println("Tipo de mídia desconhecido: " + tipo);
+                    continue;
+            }
+
+            // Insere no array midiaLista na primeira posição vazia
+            for (int j = 0; j < midiaLista.length; j++) {
+                if (midiaLista[j] == null) {
+                    midiaLista[j] = midia;
+                    break;
+                }
+            }
+        }
+        System.out.println("Mídias do JSON cadastradas com sucesso.");
     }
 }
